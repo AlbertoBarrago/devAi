@@ -1,0 +1,15 @@
+{
+  "name": "devai",
+  "module": "src/js/sketch.js",
+  "type": "module",
+  "private": true,
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "scripts": {
+    "start": "bun server.ts"
+  }
+}
