@@ -53,7 +53,6 @@ window.addData = function addData() {
     updateStatus();
     log(`+ Campione aggiunto: ${quality.toUpperCase()}`);
 
-    // Randomizza un po' i valori per il prossimo input
     document.getElementById('temp').value = (temp + (Math.random() - 0.5) * 10).toFixed(1);
     document.getElementById('pressure').value = (pressure + (Math.random() - 0.5) * 0.5).toFixed(1);
     document.getElementById('vibration').value = Math.round(vibration + (Math.random() - 0.5) * 20);

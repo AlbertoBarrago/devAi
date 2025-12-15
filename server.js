@@ -1,4 +1,4 @@
-// Configuration: map routes to HTML files in src folder
+// Configuration: map routes to HTML files in the src folder
 const config = {
   routes: {
     "/": "./src/hand-pose.html",
