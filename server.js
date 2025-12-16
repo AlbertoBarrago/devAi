@@ -3,6 +3,7 @@ const config = {
   routes: {
     "/": "./src/hand-pose.html",
     "/training": "./src/training.html",
+    "/body-segmentation": "./src/body-segmentation.html"
   },
   port: 3000,
 };

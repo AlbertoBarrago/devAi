@@ -1,5 +1,3 @@
-import {log} from "./utils.js";
-
 let nn;
 let trainingData = [];
 let isTrained = false;
@@ -18,11 +16,11 @@ async function initNN() {
 
     // ml5 neural network
     nn = ml5.neuralNetwork(options);
-    log('✓ Rete neurale inizializzata');
-    log(`→ Inputs: ${options.inputs.join(', ')}`);
-    log(`→ Output: ${options.outputs[0]}`);
-    log(`→ Hidden units: ${options.hiddenUnits}`);
-    log(`→ Backend: ${tf.getBackend()}`);
+    logToDiv('✓ Rete neurale inizializzata');
+    logToDiv(`→ Inputs: ${options.inputs.join(', ')}`);
+    logToDiv(`→ Output: ${options.outputs[0]}`);
+    logToDiv(`→ Hidden units: ${options.hiddenUnits}`);
+    logToDiv(`→ Backend: ${tf.getBackend()}`);
 }
 
 window.addData = function addData() {
@@ -46,7 +44,7 @@ window.addData = function addData() {
 
     _updateTable();
     _updateStatus();
-    log(`+ Campione aggiunto: ${quality.toUpperCase()}`);
+    logToDiv(`+ Campione aggiunto: ${quality.toUpperCase()}`);
 
     document.getElementById('temp').value = (temp + (Math.random() - 0.5) * 10).toFixed(1);
     document.getElementById('pressure').value = (pressure + (Math.random() - 0.5) * 0.5).toFixed(1);
@@ -91,12 +89,12 @@ window.addSampleData = function addSampleData() {
 
     _updateTable();
     _updateStatus();
-    log(`+ ${samples.length} campioni di esempio aggiunti`);
+    logToDiv(`+ ${samples.length} campioni di esempio aggiunti`);
 }
 
 window.trainModel = async function trainModel() {
     if (trainingData.length < 5) {
-        log('⚠ Servono almeno 5 campioni per il training');
+        logToDiv('⚠ Servono almeno 5 campioni per il training');
         return;
     }
 
@@ -104,10 +102,10 @@ window.trainModel = async function trainModel() {
     document.getElementById('modelStatus').textContent = 'TRAINING...';
     document.getElementById('modelStatus').style.color = '#ed8936';
 
-    log('🔄 Normalizzazione dati...');
+    logToDiv('🔄 Normalizzazione dati...');
     nn.normalizeData();
 
-    log('🧠 Inizio training...');
+    logToDiv('🧠 Inizio training...');
 
     const trainingOptions = {
         epochs: 50,
@@ -120,7 +118,7 @@ window.trainModel = async function trainModel() {
 
 window.predict = async function predict() {
     if (!isTrained) {
-        log('⚠ Devi prima addestrare il modello');
+        logToDiv('⚠ Devi prima addestrare il modello');
         return;
     }
 
@@ -134,7 +132,7 @@ window.predict = async function predict() {
         vibration: vibration
     };
 
-    log(`🔍 Predizione per: T=${temp}°C, P=${pressure}bar, V=${vibration}Hz`);
+    logToDiv(`🔍 Predizione per: T=${temp}°C, P=${pressure}bar, V=${vibration}Hz`);
 
     const results = await nn.classify(input);
 
@@ -143,7 +141,7 @@ window.predict = async function predict() {
 
 window.saveModel = function saveModel() {
     nn.save('quality-classifier');
-    log('💾 Modello salvato localmente');
+    logToDiv('💾 Modello salvato localmente');
 }
 
 window.clearData = async function clearData() {
@@ -157,13 +155,13 @@ window.clearData = async function clearData() {
         document.getElementById('trainBtn').disabled = true;
         document.getElementById('predictBtn').disabled = true;
         document.getElementById('saveBtn').disabled = true;
-        log('🗑️ Dati cancellati, rete reinizializzata');
+        logToDiv('🗑️ Dati cancellati, rete reinizializzata');
     }
 }
 
 function _displayPrediction(results) {
     const topResult = results[0];
-    log(`→ Risultato: ${topResult.label.toUpperCase()} (${(topResult.confidence * 100).toFixed(1)}%)`);
+    logToDiv(`→ Risultato: ${topResult.label.toUpperCase()} (${(topResult.confidence * 100).toFixed(1)}%)`);
 
     let resultColor;
     switch (topResult.label) {
@@ -209,7 +207,7 @@ function _displayPrediction(results) {
 }
 
 function _finishedTraining() {
-    log('✓ Training completato!');
+    logToDiv('✓ Training completato!');
     isTrained = true;
 
     document.getElementById('modelStatus').textContent = 'ADDESTRATA';

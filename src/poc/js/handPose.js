@@ -8,12 +8,12 @@ function preload() {
 }
 
 function setup() {
-    log("Setup starting...");
+    logToDiv("Setup starting...");
     createCanvas(640, 480);
 
-    log("Requesting camera access...");
+    logToDiv("Requesting camera access...");
     video = createCapture(VIDEO, () => {
-        log("Camera access granted!");
+        logToDiv("Camera access granted!");
     });
     video.size(640, 480);
     video.hide();
@@ -21,7 +21,7 @@ function setup() {
     bodyPose.detectStart(video, gotPoses);
 
     connections = bodyPose.getSkeleton();
-    log("Setup complete");
+    logToDiv("Setup complete");
 }
 
 function gotPoses(results) {

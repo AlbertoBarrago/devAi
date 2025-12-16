@@ -6,8 +6,7 @@
  * @param {string} message - The message to be logged.
  * @return {void} This function does not return any value.
  */
-// Define globally first
-window.log = function log(message) {
+window.logToDiv = function logToDiv(message) {
     const logDiv = document.getElementById('trainingLog');
     if (!logDiv) {
         console.log(message);
@@ -24,5 +23,4 @@ window.log = function log(message) {
     logDiv.scrollTop = logDiv.scrollHeight;
 }
 
-// Export for ES6 modules
-export const log = window.log;
+export const logToDiv = window.logToDiv;

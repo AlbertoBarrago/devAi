@@ -53,6 +53,12 @@ Train a custom neural network to classify product quality based on sensor data.
 4. Test predictions with the prediction panel
 5. Save your trained model for later use
 
+# 3 Body Segmentation
+Real-time body segmentation using your webcam.
+- Detects body keypoints in real-time
+- Draws skeletal connections between joints
+- Uses ML5.js bodyPose model
+
 ## 🛠 Tech Stack
 
 - **Runtime:** Bun
