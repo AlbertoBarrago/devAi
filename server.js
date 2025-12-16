@@ -1,6 +1,7 @@
 // Configuration: map routes to HTML files in the src folder
 const config = {
 	routes: {
+		"/": "./src/index.html",
 		"/hand-pose": "./src/hand-pose.html",
 		"/training": "./src/training.html",
 		"/body-segmentation": "./src/body-segmentation.html"
@@ -21,7 +22,7 @@ Bun.serve({
 			});
 		}
 
-		if (url.pathname.startsWith("/poc/") || url.pathname.startsWith("/js/")) {
+		if (url.pathname.startsWith("/demo/") || url.pathname.startsWith("/js/")) {
 			const file = Bun.file(`./src${url.pathname}`);
 			if (await file.exists()) {
 				const contentType =
