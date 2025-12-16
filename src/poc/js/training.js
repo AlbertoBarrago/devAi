@@ -4,12 +4,7 @@ let nn;
 let trainingData = [];
 let isTrained = false;
 
-/**
- * inits the neural network
- * @returns {Promise<void>}
- */
 async function initNN() {
-    // tensorflow.js
     await tf.ready();
 
     const options = {
@@ -49,8 +44,8 @@ window.addData = function addData() {
     nn.addData(inputs, output);
     trainingData.push({...inputs, quality});
 
-    updateTable();
-    updateStatus();
+    _updateTable();
+    _updateStatus();
     log(`+ Campione aggiunto: ${quality.toUpperCase()}`);
 
     document.getElementById('temp').value = (temp + (Math.random() - 0.5) * 10).toFixed(1);
@@ -60,21 +55,18 @@ window.addData = function addData() {
 
 window.addSampleData = function addSampleData() {
     const samples = [
-        // Prodotti OK - temperatura normale, bassa pressione, bassa vibrazione
         {temp: 22, pressure: 1.2, vibration: 45, quality: 'ok'},
         {temp: 24, pressure: 1.3, vibration: 48, quality: 'ok'},
         {temp: 23, pressure: 1.1, vibration: 42, quality: 'ok'},
         {temp: 25, pressure: 1.4, vibration: 50, quality: 'ok'},
         {temp: 21, pressure: 1.2, vibration: 44, quality: 'ok'},
 
-        // Prodotti Difettosi - alta temperatura, alta pressione, alta vibrazione
         {temp: 85, pressure: 3.5, vibration: 120, quality: 'difettoso'},
         {temp: 90, pressure: 3.8, vibration: 125, quality: 'difettoso'},
         {temp: 88, pressure: 3.6, vibration: 118, quality: 'difettoso'},
         {temp: 92, pressure: 3.9, vibration: 130, quality: 'difettoso'},
         {temp: 87, pressure: 3.7, vibration: 122, quality: 'difettoso'},
 
-        // Prodotti Riparabili - valori intermedi
         {temp: 55, pressure: 2.2, vibration: 80, quality: 'riparabile'},
         {temp: 58, pressure: 2.4, vibration: 85, quality: 'riparabile'},
         {temp: 52, pressure: 2.1, vibration: 78, quality: 'riparabile'},
@@ -97,8 +89,8 @@ window.addSampleData = function addSampleData() {
         trainingData.push({...inputs, quality: sample.quality});
     });
 
-    updateTable();
-    updateStatus();
+    _updateTable();
+    _updateStatus();
     log(`+ ${samples.length} campioni di esempio aggiunti`);
 }
 
@@ -123,18 +115,7 @@ window.trainModel = async function trainModel() {
         validationSplit: 0.2,
     };
 
-    nn.train(trainingOptions, finishedTraining);
-}
-
-function finishedTraining() {
-    log('✓ Training completato!');
-    isTrained = true;
-
-    document.getElementById('modelStatus').textContent = 'ADDESTRATA';
-    document.getElementById('modelStatus').style.color = '#38a169';
-    document.getElementById('predictBtn').disabled = false;
-    document.getElementById('saveBtn').disabled = false;
-    document.getElementById('trainBtn').disabled = false;
+    nn.train(trainingOptions, _finishedTraining);
 }
 
 window.predict = async function predict() {
@@ -157,10 +138,30 @@ window.predict = async function predict() {
 
     const results = await nn.classify(input);
 
-    displayPrediction(results);
+    _displayPrediction(results);
 }
 
-function displayPrediction(results) {
+window.saveModel = function saveModel() {
+    nn.save('quality-classifier');
+    log('💾 Modello salvato localmente');
+}
+
+window.clearData = async function clearData() {
+    if (confirm('Vuoi davvero cancellare tutti i dati?')) {
+        trainingData = [];
+        await initNN();
+        isTrained = false;
+        _updateTable();
+        _updateStatus();
+        document.getElementById('predictionResult').innerHTML = '';
+        document.getElementById('trainBtn').disabled = true;
+        document.getElementById('predictBtn').disabled = true;
+        document.getElementById('saveBtn').disabled = true;
+        log('🗑️ Dati cancellati, rete reinizializzata');
+    }
+}
+
+function _displayPrediction(results) {
     const topResult = results[0];
     log(`→ Risultato: ${topResult.label.toUpperCase()} (${(topResult.confidence * 100).toFixed(1)}%)`);
 
@@ -207,27 +208,18 @@ function displayPrediction(results) {
     document.getElementById('predictionResult').innerHTML = html;
 }
 
-window.saveModel = function saveModel() {
-    nn.save('quality-classifier');
-    log('💾 Modello salvato localmente');
+function _finishedTraining() {
+    log('✓ Training completato!');
+    isTrained = true;
+
+    document.getElementById('modelStatus').textContent = 'ADDESTRATA';
+    document.getElementById('modelStatus').style.color = '#38a169';
+    document.getElementById('predictBtn').disabled = false;
+    document.getElementById('saveBtn').disabled = false;
+    document.getElementById('trainBtn').disabled = false;
 }
 
-window.clearData = async function clearData() {
-    if (confirm('Vuoi davvero cancellare tutti i dati?')) {
-        trainingData = [];
-        await initNN();
-        isTrained = false;
-        updateTable();
-        updateStatus();
-        document.getElementById('predictionResult').innerHTML = '';
-        document.getElementById('trainBtn').disabled = true;
-        document.getElementById('predictBtn').disabled = true;
-        document.getElementById('saveBtn').disabled = true;
-        log('🗑️ Dati cancellati, rete reinizializzata');
-    }
-}
-
-function updateTable() {
+function _updateTable() {
     const tbody = document.getElementById('tableBody');
     tbody.innerHTML = '';
 
@@ -243,7 +235,7 @@ function updateTable() {
     });
 }
 
-function updateStatus() {
+function _updateStatus() {
     document.getElementById('sampleCount').textContent = trainingData.length;
 
     if (trainingData.length >= 5) {
@@ -251,10 +243,6 @@ function updateStatus() {
     }
 }
 
-
-/**
- * Inizializza il modello
- */
 window.addEventListener('load', async () => {
     await initNN();
 });

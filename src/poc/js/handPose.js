@@ -57,4 +57,4 @@ function draw() {
     }
 }
 
-// p5.js will automatically call preload(), setup(), and draw()
+// p5.js will automatically call preload(), setup(), and draw() ;)
