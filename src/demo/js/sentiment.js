@@ -14,7 +14,7 @@ function setup() {
     const wrapper = createDiv();
     wrapper.class('input-wrapper');
 
-    inputBox = createInput("Today is the happiest day and is full of rainbows!");
+    inputBox = createInput("Today is the horrible day and is full of horror!");
     inputBox.attribute("size", "75");
     inputBox.parent(wrapper);
 
