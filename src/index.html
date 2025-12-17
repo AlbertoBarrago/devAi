@@ -3,10 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Document</title>
+    <title>ML5.js Demos</title>
+    <link rel="stylesheet" href="demo/css/index.css">
 </head>
 <body>
-<h1 style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">Welcome to the ml5.js demos project!
-    <br> <small style="font-size: 0.8em; color: #666">by alBz</small> </h1>
+    <div class="container">
+        <header>
+            <h1>ML5.js Demos</h1>
+            <p class="subtitle">by alBz</p>
+        </header>
+
+        <div class="demos-grid">
+            <a href="hand-pose.html" class="demo-card hand-pose">
+                <h2>Hand Pose</h2>
+                <p>Real-time hand tracking and gesture recognition using your webcam</p>
+            </a>
+
+            <a href="image-recognition.html" class="demo-card image-recognition">
+                <h2>Image Recognition</h2>
+                <p>Classify images using the MobileNet pre-trained model</p>
+            </a>
+
+            <a href="training.html" class="demo-card training">
+                <h2>Training</h2>
+                <p>Train custom machine learning models with your own data</p>
+            </a>
+
+            <a href="body-segmentation.html" class="demo-card body-segmentation">
+                <h2>Body Segmentation</h2>
+                <p>Segment and isolate human bodies from video feed</p>
+            </a>
+        </div>
+    </div>
 </body>
 </html>
