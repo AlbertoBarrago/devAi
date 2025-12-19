@@ -1,61 +1,38 @@
-let bodyPose;
+let handPose;
 let video;
-let poses = [];
-let connections;
+let hands = [];
 
 function preload() {
-	bodyPose = ml5.bodyPose();
+    handPose = ml5.handPose();
 }
 
 function setup() {
-	logToDiv("Setup starting...");
-	const cvs = createCanvas(640, 480);
-	cvs.center('horizontal');
+    const ctx = createCanvas(1200, 850);
+    ctx.center('horizontal');
 
-	logToDiv("Requesting camera access...");
-	video = createCapture(VIDEO, () => {
-		logToDiv("Camera access granted!");
-	});
-	video.size(640, 480);
-	video.hide();
+    video = createCapture(VIDEO);
+    video.size(1200, 850);
+    video.hide();
 
-	bodyPose.detectStart(video, gotPoses);
-
-	connections = bodyPose.getSkeleton();
-	logToDiv("Setup complete");
+    handPose.detectStart(video, gotHands);
 }
 
-function gotPoses(results) {
-	poses = results;
+// Callback function for when handPose outputs data
+function gotHands(results) {
+    // Save the output to the hands variable
+    hands = results;
 }
 
 function draw() {
-	image(video, 0, 0, width, height);
-	for (let i = 0; i < poses.length; i++) {
-		let pose = poses[i];
-		for (let j = 0; j < connections.length; j++) {
-			let pointAIndex = connections[j][0];
-			let pointBIndex = connections[j][1];
-			let pointA = pose.keypoints[pointAIndex];
-			let pointB = pose.keypoints[pointBIndex];
-			if (pointA.confidence > 0.1 && pointB.confidence > 0.1) {
-				stroke(255, 0, 0);
-				strokeWeight(2);
-				line(pointA.x, pointA.y, pointB.x, pointB.y);
-			}
-		}
-	}
-	for (let i = 0; i < poses.length; i++) {
-		let pose = poses[i];
-		for (let j = 0; j < pose.keypoints.length; j++) {
-			let keypoint = pose.keypoints[j];
-			if (keypoint.confidence > 0.1) {
-				fill(0, 255, 0);
-				noStroke();
-				circle(keypoint.x, keypoint.y, 10);
-			}
-		}
-	}
+    image(video, 0, 0, width, height);
+    // Draw all the tracked hand points
+    for (let i = 0; i < hands.length; i++) {
+        let hand = hands[i];
+        for (let j = 0; j < hand.keypoints.length; j++) {
+            let keypoint = hand.keypoints[j];
+            fill(0, 255, 0);
+            noStroke();
+            circle(keypoint.x, keypoint.y, 10);
+        }
+    }
 }
-
-// p5.js will automatically call preload(), setup(), and draw() ;)
